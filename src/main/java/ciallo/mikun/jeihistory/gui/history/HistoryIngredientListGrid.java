@@ -1,6 +1,7 @@
 package ciallo.mikun.jeihistory.gui.history;
 
 
+import ciallo.mikun.jeihistory.JeiHistoryConfig;
 import ciallo.mikun.jeihistory.mixin.IngredientGridAccessor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -49,10 +50,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * @author mikun_12138
- * @date 2024/9/4 下午11:07
+ * Most of the codes are from <a href=https://github.com/vfyjxf/JEI-Utilities/blob/1.18.2/src/main/java/com/github/vfyjxf/jeiutilities/gui/history/AdvancedIngredientListGrid.java> here </a>
  */
-
 public class HistoryIngredientListGrid extends IngredientGrid {
 
     public static final int INGREDIENT_PADDING = 1;
@@ -74,18 +73,23 @@ public class HistoryIngredientListGrid extends IngredientGrid {
 
     @Override
     public void updateBounds(ImmutableRect2i availableArea, Set<ImmutableRect2i> guiExclusionAreas, @Nullable ImmutablePoint2i mouseExclusionPoint) {
+        if (!JeiHistoryConfig.open_history) {
+            super.updateBounds(availableArea, guiExclusionAreas, mouseExclusionPoint);
+            return;
+        }
+
         // Updates ingredient list
         accessor.getIngredientListRenderer().clear();
         this.historyIngredientSlotRenderer.clear();
 
         // Draws searchbar and ingredient grid pages
-        accessor.setArea(calculateBounds_History(accessor.getGridConfig(), availableArea));
+        accessor.setArea(calculateBoundsInternal(accessor.getGridConfig(), availableArea));
         ImmutableRect2i area = this.getArea();
         if (area.isEmpty()) {
             return;
         }
 
-        historyHeight = showHistory ? 2 * INGREDIENT_HEIGHT : 0;
+        historyHeight = showHistory ? JeiHistoryConfig.history_rows * INGREDIENT_HEIGHT : 0;
 
         for (int y = area.getY(); y < area.getY() + area.getHeight() - historyHeight; y += INGREDIENT_HEIGHT) {
             for (int x = area.getX(); x < area.getX() + area.getWidth(); x += INGREDIENT_WIDTH) {
@@ -115,15 +119,15 @@ public class HistoryIngredientListGrid extends IngredientGrid {
         this.historyIngredientSlotRenderer.set(0, this.historyIngredientsList);
     }
 
-    private ImmutableRect2i calculateBounds_History(@NotNull IIngredientGridConfig config, @NotNull ImmutableRect2i availableArea) {
+    private ImmutableRect2i calculateBoundsInternal(@NotNull IIngredientGridConfig config, @NotNull ImmutableRect2i availableArea) {
         final int columns = Math.min(availableArea.getWidth() / IngredientGrid.INGREDIENT_WIDTH, config.getMaxColumns());
         final int rows = Math.min(availableArea.getHeight() / IngredientGrid.INGREDIENT_HEIGHT, config.getMaxRows());
-        this.showHistory = rows - 2 >= MIN_ROWS;
+        this.showHistory = rows - JeiHistoryConfig.history_rows >= MIN_ROWS;
 
         if (rows < config.getMinRows() || columns < config.getMinColumns()) {
             return ImmutableRect2i.EMPTY;
         }
-        this.historyMaxSize = 2 * columns;
+        this.historyMaxSize = JeiHistoryConfig.history_rows * columns;
         final int width = columns * IngredientGrid.INGREDIENT_WIDTH;
         final int height = rows * IngredientGrid.INGREDIENT_HEIGHT;
 
@@ -145,6 +149,9 @@ public class HistoryIngredientListGrid extends IngredientGrid {
     @Override
     public void draw(Minecraft minecraft, GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.draw(minecraft, guiGraphics, mouseX, mouseY);
+        if (!JeiHistoryConfig.open_history) {
+            return;
+        }
 
         if (showHistory) {
             this.historyIngredientSlotRenderer.render(guiGraphics);
@@ -175,6 +182,10 @@ public class HistoryIngredientListGrid extends IngredientGrid {
     @Override
     public void drawTooltips(Minecraft minecraft, GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.drawTooltips(minecraft, guiGraphics, mouseX, mouseY);
+        if (!JeiHistoryConfig.open_history) {
+            return;
+        }
+
         if (showHistory) {
             if (isMouseOver(mouseX, mouseY)) {
                 DeleteItemInputHandler deleteItemInputHandler = (DeleteItemInputHandler) this.getInputHandler();
@@ -227,6 +238,9 @@ public class HistoryIngredientListGrid extends IngredientGrid {
 
     @Override
     public Stream<IClickableIngredientInternal<?>> getIngredientUnderMouse(double mouseX, double mouseY) {
+        if (!JeiHistoryConfig.open_history) {
+            return super.getIngredientUnderMouse(mouseX, mouseY);
+        }
         return Stream.concat(
                 super.getIngredientUnderMouse(mouseX, mouseY),
                 historyIngredientSlotRenderer.getSlots()
@@ -238,6 +252,9 @@ public class HistoryIngredientListGrid extends IngredientGrid {
 
     @Override
     public Stream<IDraggableIngredientInternal<?>> getDraggableIngredientUnderMouse(double mouseX, double mouseY) {
+        if (!JeiHistoryConfig.open_history) {
+            return super.getDraggableIngredientUnderMouse(mouseX, mouseY);
+        }
         return Stream.concat(
                 super.getDraggableIngredientUnderMouse(mouseX, mouseY),
                 this.historyIngredientSlotRenderer.getSlots()
@@ -249,6 +266,9 @@ public class HistoryIngredientListGrid extends IngredientGrid {
 
     @Override
     public <T> Stream<T> getVisibleIngredients(IIngredientType<T> ingredientType) {
+        if (!JeiHistoryConfig.open_history) {
+            return super.getVisibleIngredients(ingredientType);
+        }
         return Stream.concat(
                 super.getVisibleIngredients(ingredientType),
                 this.historyIngredientSlotRenderer.getSlots()

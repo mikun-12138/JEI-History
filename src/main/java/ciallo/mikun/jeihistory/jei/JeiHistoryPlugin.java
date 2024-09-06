@@ -1,6 +1,6 @@
 package ciallo.mikun.jeihistory.jei;
 
-import ciallo.mikun.jeihistory.Jeihistory;
+import ciallo.mikun.jeihistory.JeiHistory;
 import ciallo.mikun.jeihistory.gui.history.HistoryIngredientListGrid;
 import ciallo.mikun.jeihistory.mixin.IngredientGridAccessor;
 import mezz.jei.api.IModPlugin;
@@ -26,11 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import static net.minecraftforge.fml.util.ObfuscationReflectionHelper.getPrivateValue;
 
-/**
- * @author mikun_12138
- * @date 2024/9/4 下午11:36
- */
-
 @JeiPlugin
 public class JeiHistoryPlugin implements IModPlugin {
 
@@ -39,7 +34,7 @@ public class JeiHistoryPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(Jeihistory.MODID, "jei");
+        return new ResourceLocation(JeiHistory.MODID, "jei");
     }
 
     @Override

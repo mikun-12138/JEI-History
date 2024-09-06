@@ -45,10 +45,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * @author mikun_12138
- * @date 2024/9/5 下午10:43
- */
 @Mixin(value = JeiGuiStarter.class, remap = false)
 public class JeiGuiStarterMixin {
     @Inject(method = "start", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

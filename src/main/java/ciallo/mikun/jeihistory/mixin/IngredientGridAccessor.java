@@ -10,10 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 
-/**
- * @author mikun_12138
- * @date 2024/9/5 下午1:05
- */
 @Mixin(value = IngredientGrid.class, remap = false)
 public interface IngredientGridAccessor {
     @Accessor

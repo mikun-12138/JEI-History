@@ -8,10 +8,6 @@ import mezz.jei.gui.overlay.IngredientGridTooltipHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-/**
- * @author mikun_12138
- * @date 2024/9/5 下午6:25
- */
 @Mixin(value = IngredientGridTooltipHelper.class, remap = false)
 public interface IngredientGridToolHelperMixin {
     @Accessor

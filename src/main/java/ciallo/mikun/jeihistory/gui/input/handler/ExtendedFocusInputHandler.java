@@ -1,5 +1,6 @@
 package ciallo.mikun.jeihistory.gui.input.handler;
 
+import ciallo.mikun.jeihistory.JeiHistoryConfig;
 import ciallo.mikun.jeihistory.jei.JeiHistoryPlugin;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.runtime.IIngredientManager;
@@ -25,10 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author mikun_12138
- * @date 2024/9/5 下午8:54
- */
+
 public class ExtendedFocusInputHandler implements IUserInputHandler {
     private final CombinedRecipeFocusSource focusSource;
     private final IRecipesGui recipesGui;
@@ -106,7 +104,7 @@ public class ExtendedFocusInputHandler implements IUserInputHandler {
                         element.show(recipesGui, focusUtil, roles);
 
                         // add history here
-                        if (true && true) {
+                        if (JeiHistoryConfig.open_history) {
                             JeiHistoryPlugin.grid.addHistory(clicked.getTypedIngredient());
                         }
                     }
