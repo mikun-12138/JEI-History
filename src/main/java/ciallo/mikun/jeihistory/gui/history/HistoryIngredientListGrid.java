@@ -2,7 +2,7 @@ package ciallo.mikun.jeihistory.gui.history;
 
 
 import ciallo.mikun.jeihistory.JeiHistoryConfig;
-import ciallo.mikun.jeihistory.mixin.IngredientGridAccessor;
+import ciallo.mikun.jeihistory.mixin.IngredientGridMixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -55,8 +55,8 @@ import java.util.stream.Stream;
 public class HistoryIngredientListGrid extends IngredientGrid {
 
     public static final int INGREDIENT_PADDING = 1;
-    private int MIN_ROWS = 5;
-    private final IngredientGridAccessor accessor = (IngredientGridAccessor) this;
+    private final int MIN_ROWS = 5;
+    private final IngredientGridMixin accessor = (IngredientGridMixin) this;
     public final IngredientListRenderer historyIngredientSlotRenderer;
     public final List<IElement<?>> historyIngredientsList;
     private boolean showHistory = false;
@@ -89,13 +89,17 @@ public class HistoryIngredientListGrid extends IngredientGrid {
             return;
         }
 
+
+        System.out.println(area);
+
+
         historyHeight = showHistory ? JeiHistoryConfig.history_rows * INGREDIENT_HEIGHT : 0;
 
         for (int y = area.getY(); y < area.getY() + area.getHeight() - historyHeight; y += INGREDIENT_HEIGHT) {
             for (int x = area.getX(); x < area.getX() + area.getWidth(); x += INGREDIENT_WIDTH) {
                 IngredientListSlot ingredientListSlot = new IngredientListSlot(x, y, INGREDIENT_WIDTH, INGREDIENT_HEIGHT, INGREDIENT_PADDING);
                 ImmutableRect2i stackArea = ingredientListSlot.getArea();
-                final boolean blocked = MathUtil.intersects(guiExclusionAreas, stackArea);
+                boolean blocked = MathUtil.intersects(guiExclusionAreas, stackArea.expandBy(2)) || mouseExclusionPoint != null && stackArea.contains(mouseExclusionPoint);
                 ingredientListSlot.setBlocked(blocked);
                 accessor.getIngredientListRenderer().add(ingredientListSlot);
             }
@@ -107,7 +111,7 @@ public class HistoryIngredientListGrid extends IngredientGrid {
                 for (int x = area.getX(); x < area.getX() + area.getWidth(); x += INGREDIENT_WIDTH) {
                     IngredientListSlot ingredientListSlot = new IngredientListSlot(x, y, INGREDIENT_WIDTH, INGREDIENT_HEIGHT, INGREDIENT_PADDING);
                     ImmutableRect2i stackArea = ingredientListSlot.getArea();
-                    final boolean blocked = MathUtil.intersects(guiExclusionAreas, stackArea);
+                    boolean blocked = MathUtil.intersects(guiExclusionAreas, stackArea.expandBy(2)) || mouseExclusionPoint != null && stackArea.contains(mouseExclusionPoint);
                     ingredientListSlot.setBlocked(blocked);
                     historyIngredientSlotRenderer.add(ingredientListSlot);
                 }
@@ -146,11 +150,20 @@ public class HistoryIngredientListGrid extends IngredientGrid {
         return new ImmutableRect2i(x, y, width, height);
     }
 
+    static int timer = 0;
+
     @Override
     public void draw(Minecraft minecraft, GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.draw(minecraft, guiGraphics, mouseX, mouseY);
         if (!JeiHistoryConfig.open_history) {
             return;
+        }
+
+        if (++timer > 60) {
+            timer = 0;
+            System.out.println(mouseX + " " + mouseY);
+           // 331 28 421 208
+            // 259 28 421 208
         }
 
         if (showHistory) {

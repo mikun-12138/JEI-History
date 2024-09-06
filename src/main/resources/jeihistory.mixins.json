@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "jeihistory.refmap.json",
   "mixins": [
-    "IngredientGridAccessor",
-    "IngredientGridToolHelperMixin",
+    "IngredientGridMixin",
     "JeiGuiStarterMixin"
   ],
   "client": [

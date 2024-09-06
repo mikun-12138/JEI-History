@@ -17,7 +17,7 @@ public class JeiHistoryConfig {
         BUILDER = new ForgeConfigSpec.Builder();
         BUILDER.push("client-settings");
         OPEN_HISTORY = BUILDER.comment("是否打开历史记录").define("open_history", true);
-        HISTORY_ROWS = BUILDER.comment("历史记录行数").defineInRange("history_rows", 2, 1, 20);
+        HISTORY_ROWS = BUILDER.comment("历史记录行数").defineInRange("history_rows", 2, 1, 10);
         BUILDER.pop();
         SPEC = BUILDER.build();
     }

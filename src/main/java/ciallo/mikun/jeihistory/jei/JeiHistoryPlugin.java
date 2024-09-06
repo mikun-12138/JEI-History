@@ -2,7 +2,7 @@ package ciallo.mikun.jeihistory.jei;
 
 import ciallo.mikun.jeihistory.JeiHistory;
 import ciallo.mikun.jeihistory.gui.history.HistoryIngredientListGrid;
-import ciallo.mikun.jeihistory.mixin.IngredientGridAccessor;
+import ciallo.mikun.jeihistory.mixin.IngredientGridMixin;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IColorHelper;
@@ -42,11 +42,13 @@ public class JeiHistoryPlugin implements IModPlugin {
 
         IngredientGridWithNavigation ingredientGridWithNavigation = getPrivateValue(IngredientListOverlay.class, (IngredientListOverlay) jeiRuntime.getIngredientListOverlay(), "contents");
         IngredientGrid ingredientGrid = getPrivateValue(IngredientGridWithNavigation.class, ingredientGridWithNavigation, "ingredientGrid");
-        IngredientGridAccessor accessor = (IngredientGridAccessor) ingredientGrid;
+        IngredientGridMixin accessor = (IngredientGridMixin) ingredientGrid;
         IngredientGridTooltipHelper tooltipHelper = getPrivateValue(IngredientGrid.class, ingredientGrid, "tooltipHelper");
         DeleteItemInputHandler deleteItemHandler = getPrivateValue(IngredientGrid.class, ingredientGrid, "deleteItemHandler");
 
+
         params.ingredientManager = accessor.getIngredientManager();
+        params.gridConfig = getPrivateValue(IngredientGrid.class, ingredientGrid, "gridConfig");
         params.gridConfig = accessor.getGridConfig();
         params.ingredientFilterConfig = getPrivateValue(IngredientGridTooltipHelper.class, tooltipHelper, "ingredientFilterConfig");
         params.clientConfig = getPrivateValue(DeleteItemInputHandler.class, deleteItemHandler, "clientConfig");
@@ -54,6 +56,7 @@ public class JeiHistoryPlugin implements IModPlugin {
         params.serverConnection = getPrivateValue(DeleteItemInputHandler.class, deleteItemHandler, "serverConnection");
         params.keyBindings = getPrivateValue(IngredientGridTooltipHelper.class, tooltipHelper, "keyBindings");
         params.colorHelper = getPrivateValue(IngredientGridTooltipHelper.class, tooltipHelper, "colorHelper");
+        params.searchable = Boolean.TRUE.equals(getPrivateValue(IngredientGrid.class, ingredientGrid, "searchable"));
         params.searchable = accessor.getSearchable();
 
         grid = new HistoryIngredientListGrid(

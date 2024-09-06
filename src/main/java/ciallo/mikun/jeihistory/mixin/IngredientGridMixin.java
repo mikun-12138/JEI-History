@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 
 @Mixin(value = IngredientGrid.class, remap = false)
-public interface IngredientGridAccessor {
+public interface IngredientGridMixin {
     @Accessor
     IngredientListRenderer getIngredientListRenderer();
 
