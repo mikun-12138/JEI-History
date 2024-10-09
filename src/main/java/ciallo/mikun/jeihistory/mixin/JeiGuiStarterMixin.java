@@ -1,6 +1,7 @@
 package ciallo.mikun.jeihistory.mixin;
 
 import ciallo.mikun.jeihistory.gui.input.handler.ExtendedFocusInputHandler;
+import ciallo.mikun.jeihistory.jei.JeiHistoryPlugin;
 import mezz.jei.api.helpers.IColorHelper;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
@@ -45,17 +46,19 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Comparator;
 import java.util.List;
 
+
 @Mixin(value = JeiGuiStarter.class, remap = false)
 public class JeiGuiStarterMixin {
     @Inject(method = "start", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private static void onStart(IRuntimeRegistration registration, CallbackInfoReturnable<JeiEventHandlers> cir, LoggedTimer timer, IConnectionToServer serverConnection, Textures textures, IInternalKeyMappings keyMappings, IScreenHelper screenHelper, IRecipeTransferManager recipeTransferManager, IRecipeManager recipeManager, IIngredientVisibility ingredientVisibility, IIngredientManager ingredientManager, IEditModeConfig editModeConfig, IJeiHelpers jeiHelpers, IColorHelper colorHelper, IModIdHelper modIdHelper, IFocusFactory focusFactory, IGuiHelper guiHelper, IFilterTextSource filterTextSource, Minecraft minecraft, ClientLevel level, RegistryAccess registryAccess, List ingredientList, GuiConfigData configData, ModNameSortingConfig modNameSortingConfig, IngredientTypeSortingConfig ingredientTypeSortingConfig, IClientToggleState toggleState, IBookmarkConfig bookmarkConfig, IJeiClientConfigs jeiClientConfigs, IClientConfig clientConfig, IIngredientGridConfig ingredientListConfig, IIngredientGridConfig bookmarkListConfig, IIngredientFilterConfig ingredientFilterConfig, Comparator ingredientComparator, IngredientFilter ingredientFilter, IIngredientFilter ingredientFilterApi, IngredientListOverlay ingredientListOverlay, BookmarkList bookmarkList, BookmarkOverlay bookmarkOverlay, GuiEventHandler guiEventHandler, RecipesGui recipesGui, CombinedRecipeFocusSource recipeFocusSource, List charTypedHandlers, FocusUtil focusUtil, UserInputRouter userInputRouter, DragRouter dragRouter, ClientInputHandler clientInputHandler, ResourceReloadHandler resourceReloadHandler) {
+        JeiHistoryPlugin.extendedFocusInputHandler = new ExtendedFocusInputHandler(recipeFocusSource, recipesGui, focusUtil, clientConfig, ingredientManager, toggleState, serverConnection);
         UserInputRouter userInputRouter1 = new UserInputRouter(
                 "JEIGlobal",
                 new EditInputHandler(recipeFocusSource, toggleState, editModeConfig),
                 ingredientListOverlay.createInputHandler(),
                 bookmarkOverlay.createInputHandler(),
                 // here
-                new ExtendedFocusInputHandler(recipeFocusSource, recipesGui, focusUtil, clientConfig, ingredientManager, toggleState, serverConnection),
+                JeiHistoryPlugin.extendedFocusInputHandler,
                 new BookmarkInputHandler(recipeFocusSource, bookmarkList),
                 new GlobalInputHandler(toggleState),
                 new GuiAreaInputHandler(screenHelper, recipesGui, focusFactory)

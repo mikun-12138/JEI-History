@@ -89,10 +89,6 @@ public class HistoryIngredientListGrid extends IngredientGrid {
             return;
         }
 
-
-        System.out.println(area);
-
-
         historyHeight = showHistory ? JeiHistoryConfig.history_rows * INGREDIENT_HEIGHT : 0;
 
         for (int y = area.getY(); y < area.getY() + area.getHeight() - historyHeight; y += INGREDIENT_HEIGHT) {
@@ -161,7 +157,6 @@ public class HistoryIngredientListGrid extends IngredientGrid {
 
         if (++timer > 60) {
             timer = 0;
-            System.out.println(mouseX + " " + mouseY);
            // 331 28 421 208
             // 259 28 421 208
         }

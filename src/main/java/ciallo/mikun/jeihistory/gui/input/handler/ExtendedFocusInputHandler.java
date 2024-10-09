@@ -105,7 +105,7 @@ public class ExtendedFocusInputHandler implements IUserInputHandler {
 
                         // add history here
                         if (JeiHistoryConfig.open_history) {
-                            JeiHistoryPlugin.grid.addHistory(clicked.getTypedIngredient());
+                            JeiHistoryPlugin.historyIngredientListGrid.addHistory(clicked.getTypedIngredient());
                         }
                     }
                     return new SameElementInputHandler(this, clicked::isMouseOver);

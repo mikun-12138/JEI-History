@@ -6,7 +6,8 @@
   "refmap": "jeihistory.refmap.json",
   "mixins": [
     "IngredientGridMixin",
-    "JeiGuiStarterMixin"
+    "JeiGuiStarterMixin",
+    "OverlayHelperMixin"
   ],
   "client": [
   ]
